@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+
+  ai:
+    openai:
+      base-url: ${OPENAI_URL:http://localhost:11434}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true

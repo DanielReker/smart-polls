@@ -1,0 +1,28 @@
+server:
+  port: ${SMART_POLLS_PORT:8080}
+
+spring:
+  application:
+    name: smart-polls
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  ai:
+    openai:
+      base-url: ${OPENAI_URL}
+      api-key: ${OPENAI_API_KEY}
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+

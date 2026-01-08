@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.9'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'io.github.danielreker'
+version = '0.0.1-SNAPSHOT'
+description = 'smart-polls'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springAiVersion', "1.1.2")
+    set('mapStructVersion', "1.6.3")
+    set('lombokMapStructBindingVersion', "0.2.0")
+    set('springdocVersion', "2.8.15")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.springframework.ai:spring-ai-advisors-vector-store'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-pgvector'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructBindingVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

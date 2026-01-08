@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17.7
+    container_name: smart-polls-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - smart-polls-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+volumes:
+  smart-polls-postgres-data:
