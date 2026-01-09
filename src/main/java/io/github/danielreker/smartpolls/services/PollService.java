@@ -35,7 +35,7 @@ public class PollService {
 
     private final SubmissionMapper submissionMapper;
 
-    private final QuestionBuilderManagerService questionBuilderManagerService;
+    private final QuestionManagerService questionManagerService;
 
 
 
@@ -59,7 +59,7 @@ public class PollService {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         if (pollEntity.getStatus() != PollStatus.DRAFT) {
-            throw new InvalidPollStatusException("Can't update questions in non-draft poll," +
+            throw new InvalidPollStatusException("Can't update questions in non-draft poll, " +
                     "its current status: " + pollEntity.getStatus());
         }
 
@@ -69,7 +69,7 @@ public class PollService {
                 .addAll(request
                         .questions()
                         .stream()
-                        .map(questionBuilderManagerService::buildQuestion)
+                        .map(questionManagerService::buildQuestion)
                         .peek(questionEntity -> questionEntity.setPoll(pollEntity))
                         .toList());
 
@@ -128,7 +128,7 @@ public class PollService {
                 .map(question -> {
                     final Optional<AnswerEntity> answerEntity = Optional
                             .ofNullable(questionIdToAnswerDto.get(question.getId()))
-                            .map(answerDto -> questionBuilderManagerService
+                            .map(answerDto -> questionManagerService
                                     .buildAnswer(question, answerDto));
 
                     if (answerEntity.isEmpty() && question.getIsRequired()) {
@@ -150,6 +150,19 @@ public class PollService {
                 submissionRepository.save(submissionEntity);
 
         return submissionMapper.toResponse(savedSubmissionEntity);
+    }
+
+    public StatsResponse getStats(Long pollId) {
+        final PollEntity pollEntity = findPollEntityById(pollId);
+
+        return StatsResponse
+                .builder()
+                .stats(pollEntity
+                        .getQuestions()
+                        .stream()
+                        .map(questionManagerService::getQuestionStats)
+                        .toList())
+                .build();
     }
 
 

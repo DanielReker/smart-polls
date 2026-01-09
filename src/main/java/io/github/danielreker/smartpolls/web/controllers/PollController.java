@@ -79,4 +79,15 @@ class PollController {
                 .body(response);
     }
 
+    @GetMapping("/{pollId}/stats")
+    public ResponseEntity<StatsResponse> getStats(
+            @PathVariable Long pollId
+    ) {
+        final StatsResponse response = pollService.getStats(pollId);
+
+        return ResponseEntity
+                .ok()
+                .body(response);
+    }
+
 }

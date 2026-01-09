@@ -1,21 +1,25 @@
-package io.github.danielreker.smartpolls.services.question.builders;
+package io.github.danielreker.smartpolls.services.question;
 
 import io.github.danielreker.smartpolls.dao.entities.answers.TextAnswerEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionEntity;
+import io.github.danielreker.smartpolls.dao.repositories.answers.TextAnswerRepository;
 import io.github.danielreker.smartpolls.mappers.QuestionMapper;
 import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.model.exceptions.AnswerValidationException;
 import io.github.danielreker.smartpolls.web.dtos.answers.TextAnswerDto;
 import io.github.danielreker.smartpolls.web.dtos.questions.TextQuestionDto;
+import io.github.danielreker.smartpolls.web.dtos.stats.TextQuestionStatsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TextQuestionBuilderService
-        extends QuestionBuilderService<TextQuestionEntity, TextQuestionDto, TextAnswerDto> {
+public class TextQuestionService
+        extends QuestionService<TextQuestionEntity, TextQuestionDto, TextAnswerDto> {
 
     private final QuestionMapper questionMapper;
+
+    private final TextAnswerRepository textAnswerRepository;
 
     @Override
     public QuestionType getQuestionType() {
@@ -38,6 +42,15 @@ public class TextQuestionBuilderService
     @Override
     public TextQuestionEntity buildQuestion(TextQuestionDto questionDto) {
         return questionMapper.toEntity(questionDto);
+    }
+
+    @Override
+    public TextQuestionStatsDto getQuestionStats(TextQuestionEntity question) {
+        return TextQuestionStatsDto
+                .builder()
+                .questionId(question.getId())
+                .answerCount(textAnswerRepository.countByQuestionId(question.getId()))
+                .build();
     }
 
 }

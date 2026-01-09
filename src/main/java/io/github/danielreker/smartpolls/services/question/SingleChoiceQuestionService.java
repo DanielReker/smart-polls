@@ -1,13 +1,16 @@
-package io.github.danielreker.smartpolls.services.question.builders;
+package io.github.danielreker.smartpolls.services.question;
 
 import io.github.danielreker.smartpolls.dao.entities.answers.SingleChoiceAnswerEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.ChoiceEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.SingleChoiceQuestionEntity;
+import io.github.danielreker.smartpolls.dao.repositories.answers.SingleChoiceAnswerRepository;
 import io.github.danielreker.smartpolls.mappers.ChoiceMapper;
 import io.github.danielreker.smartpolls.mappers.QuestionMapper;
 import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.web.dtos.answers.SingleChoiceAnswerDto;
 import io.github.danielreker.smartpolls.web.dtos.questions.SingleChoiceQuestionDto;
+import io.github.danielreker.smartpolls.web.dtos.stats.ChoiceStatsDto;
+import io.github.danielreker.smartpolls.web.dtos.stats.SingleChoiceQuestionStatsDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +19,14 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class SingleChoiceQuestionBuilderService
-        extends QuestionBuilderService<SingleChoiceQuestionEntity, SingleChoiceQuestionDto, SingleChoiceAnswerDto> {
+public class SingleChoiceQuestionService
+        extends QuestionService<SingleChoiceQuestionEntity, SingleChoiceQuestionDto, SingleChoiceAnswerDto> {
 
     private final QuestionMapper questionMapper;
 
     private final ChoiceMapper choiceMapper;
+
+    private final SingleChoiceAnswerRepository singleChoiceAnswerRepository;
 
     @Override
     public QuestionType getQuestionType() {
@@ -56,6 +61,24 @@ public class SingleChoiceQuestionBuilderService
                 .toList());
 
         return question;
+    }
+
+    @Override
+    public SingleChoiceQuestionStatsDto getQuestionStats(SingleChoiceQuestionEntity question) {
+        return SingleChoiceQuestionStatsDto
+                .builder()
+                .questionId(question.getId())
+                .answerCount(singleChoiceAnswerRepository.countByQuestionId(question.getId()))
+                .choiceStats(question
+                        .getPossibleChoices()
+                        .stream()
+                        .map(choice -> ChoiceStatsDto
+                                .builder()
+                                .id(choice.getId())
+                                .count(singleChoiceAnswerRepository.countChoiceSelectionsByChoiceId(choice.getId()))
+                                .build())
+                        .toList())
+                .build();
     }
 
 }
