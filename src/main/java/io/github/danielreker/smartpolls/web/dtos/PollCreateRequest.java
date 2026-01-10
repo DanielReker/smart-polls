@@ -19,7 +19,4 @@ public class PollCreateRequest {
     @Nullable
     String description;
 
-    @Nullable
-    String prompt;
-
 }

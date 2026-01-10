@@ -7,12 +7,15 @@ import io.github.danielreker.smartpolls.dao.entities.answers.AnswerEntity;
 import io.github.danielreker.smartpolls.dao.repositories.PollRepository;
 import io.github.danielreker.smartpolls.dao.repositories.SubmissionRepository;
 import io.github.danielreker.smartpolls.mappers.PollMapper;
+import io.github.danielreker.smartpolls.mappers.QuestionMapper;
 import io.github.danielreker.smartpolls.mappers.SubmissionMapper;
 import io.github.danielreker.smartpolls.model.auth.AuthenticatedUser;
 import io.github.danielreker.smartpolls.model.exceptions.InvalidPollStatusException;
 import io.github.danielreker.smartpolls.services.auth.UserService;
+import io.github.danielreker.smartpolls.services.question.AiQuestionGeneratorService;
 import io.github.danielreker.smartpolls.web.dtos.*;
 import io.github.danielreker.smartpolls.web.dtos.answers.AnswerDto;
+import io.github.danielreker.smartpolls.web.dtos.questions.QuestionDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +46,10 @@ public class PollService {
     private final UserService userService;
 
     private final PollSecurityService pollSecurityService;
+
+    private final QuestionMapper questionMapper;
+
+    private final AiQuestionGeneratorService aiQuestionGeneratorService;
 
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGISTERED')")
@@ -216,6 +223,30 @@ public class PollService {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
+    public PollResponse aiGenerateQuestions(
+            Long pollId,
+            AiGenerateQuestionsRequest request,
+            AuthenticatedUser user
+    ) {
+        final PollEntity pollEntity = findPollEntityById(pollId);
+
+        final List<QuestionDto> currentQuestions = pollEntity
+                .getQuestions()
+                .stream()
+                .map(questionMapper::toDto)
+                .toList();
+
+        final List<QuestionDto> newQuestions = aiQuestionGeneratorService
+                .transformQuestions(currentQuestions, request.getPrompt());
+
+        final PollQuestionsUpsertRequest pollQuestionsUpsertRequest = PollQuestionsUpsertRequest
+                .builder()
+                .questions(newQuestions)
+                .build();
+
+        return upsertQuestions(pollId, pollQuestionsUpsertRequest, user);
+    }
 
     private PollEntity findPollEntityById(Long pollId) {
         return pollRepository

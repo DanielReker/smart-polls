@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate.format_sql: true
@@ -13,7 +13,10 @@ spring:
 
   ai:
     openai:
-      base-url: ${OPENAI_URL:http://localhost:11434}
+      base-url: ${OPENAI_URL:http://localhost:11435}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gemma3:4b}
 
 springdoc:
   swagger-ui:

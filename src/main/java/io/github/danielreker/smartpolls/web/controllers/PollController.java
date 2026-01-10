@@ -111,4 +111,18 @@ class PollController {
                 .body(response);
     }
 
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @PostMapping("/{pollId}/questions:ai-generate")
+    public ResponseEntity<PollResponse> aiGenerateQuestions(
+            @PathVariable Long pollId,
+            @RequestBody @Valid AiGenerateQuestionsRequest request,
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        final PollResponse response = pollService.aiGenerateQuestions(pollId, request, user);
+
+        return ResponseEntity
+                .ok()
+                .body(response);
+    }
+
 }

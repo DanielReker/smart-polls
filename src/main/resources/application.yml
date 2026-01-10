@@ -22,6 +22,9 @@ spring:
     openai:
       base-url: ${OPENAI_URL}
       api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL}
 
 springdoc:
   swagger-ui:
