@@ -1,6 +1,7 @@
 package io.github.danielreker.smartpolls.dao.entities;
 
 import io.github.danielreker.smartpolls.dao.entities.answers.AnswerEntity;
+import io.github.danielreker.smartpolls.dao.entities.auth.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,8 +33,10 @@ public class SubmissionEntity {
     private PollEntity poll;
 
     @OneToMany(mappedBy = "submission", orphanRemoval = true, cascade = CascadeType.ALL)
-    // TODO: Fix and enable back
-    // @OrderBy("question.position ASC")
     private List<AnswerEntity> answers = new ArrayList<>();
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity owner;
 
 }

@@ -36,4 +36,7 @@ public class PollResponse {
     @NotNull
     List<QuestionDto> questions;
 
+    @NotNull
+    Long mySubmissionsCount;
+
 }

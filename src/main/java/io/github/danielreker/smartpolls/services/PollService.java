@@ -8,11 +8,14 @@ import io.github.danielreker.smartpolls.dao.repositories.PollRepository;
 import io.github.danielreker.smartpolls.dao.repositories.SubmissionRepository;
 import io.github.danielreker.smartpolls.mappers.PollMapper;
 import io.github.danielreker.smartpolls.mappers.SubmissionMapper;
+import io.github.danielreker.smartpolls.model.auth.AuthenticatedUser;
 import io.github.danielreker.smartpolls.model.exceptions.InvalidPollStatusException;
+import io.github.danielreker.smartpolls.services.auth.UserService;
 import io.github.danielreker.smartpolls.web.dtos.*;
 import io.github.danielreker.smartpolls.web.dtos.answers.AnswerDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,25 +40,46 @@ public class PollService {
 
     private final QuestionManagerService questionManagerService;
 
+    private final UserService userService;
+
+    private final PollSecurityService pollSecurityService;
 
 
-
-    public PollResponse createPoll(PollCreateRequest request) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGISTERED')")
+    public PollResponse createPoll(
+            PollCreateRequest request,
+            AuthenticatedUser user
+    ) {
         PollEntity pollEntity = pollMapper.createRequestToEntity(request);
         pollEntity.setStatus(PollStatus.DRAFT);
+        pollEntity.setOwner(userService.getUserReference(user));
 
         pollEntity = pollRepository.save(pollEntity);
 
-        return pollMapper.toResponse(pollEntity);
+        return pollMapper.toResponse(
+                pollEntity,
+                pollSecurityService.countUserSubmissionsToPoll(user.getId(), pollEntity.getId())
+        );
     }
 
-    public PollResponse getPoll(Long pollId) {
+    public PollResponse getPoll(
+            Long pollId,
+            AuthenticatedUser user
+    ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
-        return pollMapper.toResponse(pollEntity);
+        return pollMapper.toResponse(
+                pollEntity,
+                pollSecurityService.countUserSubmissionsToPoll(user.getId(), pollEntity.getId())
+        );
     }
 
-    public PollResponse upsertQuestions(Long pollId, PollQuestionsUpsertRequest request) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
+    public PollResponse upsertQuestions(
+            Long pollId,
+            PollQuestionsUpsertRequest request,
+            AuthenticatedUser user
+    ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         if (pollEntity.getStatus() != PollStatus.DRAFT) {
@@ -73,10 +97,17 @@ public class PollService {
                         .peek(questionEntity -> questionEntity.setPoll(pollEntity))
                         .toList());
 
-        return pollMapper.toResponse(pollRepository.save(pollEntity));
+        return pollMapper.toResponse(
+                pollRepository.save(pollEntity),
+                pollSecurityService.countUserSubmissionsToPoll(user.getId(), pollEntity.getId())
+        );
     }
 
-    public PollResponse startPoll(Long pollId) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
+    public PollResponse startPoll(
+            Long pollId,
+            AuthenticatedUser user
+    ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         if (pollEntity.getStatus() != PollStatus.DRAFT) {
@@ -85,10 +116,17 @@ public class PollService {
 
         pollEntity.setStatus(PollStatus.ACTIVE);
 
-        return pollMapper.toResponse(pollRepository.save(pollEntity));
+        return pollMapper.toResponse(
+                pollRepository.save(pollEntity),
+                pollSecurityService.countUserSubmissionsToPoll(user.getId(), pollEntity.getId())
+        );
     }
 
-    public PollResponse finishPoll(Long pollId) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
+    public PollResponse finishPoll(
+            Long pollId,
+            AuthenticatedUser user
+    ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         if (pollEntity.getStatus() != PollStatus.ACTIVE) {
@@ -97,10 +135,21 @@ public class PollService {
 
         pollEntity.setStatus(PollStatus.FINISHED);
 
-        return pollMapper.toResponse(pollRepository.save(pollEntity));
+        return pollMapper.toResponse(
+                pollRepository.save(pollEntity),
+                pollSecurityService.countUserSubmissionsToPoll(user.getId(), pollEntity.getId())
+        );
     }
 
-    public SubmissionResponse createSubmission(Long pollId, SubmissionCreateRequest request) {
+    @PreAuthorize("""
+        hasRole('ROLE_ADMIN') or
+        @pollSecurityService.countUserSubmissionsToPoll(authentication.principal.id, #pollId) < 1
+        """)
+    public SubmissionResponse createSubmission(
+            Long pollId,
+            SubmissionCreateRequest request,
+            AuthenticatedUser user
+    ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         if (pollEntity.getStatus() != PollStatus.ACTIVE) {
@@ -145,6 +194,7 @@ public class PollService {
 
         submissionEntity.setPoll(pollEntity);
         submissionEntity.setAnswers(answers);
+        submissionEntity.setOwner(userService.getUserReference(user));
 
         final SubmissionEntity savedSubmissionEntity =
                 submissionRepository.save(submissionEntity);
@@ -152,6 +202,7 @@ public class PollService {
         return submissionMapper.toResponse(savedSubmissionEntity);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
     public StatsResponse getStats(Long pollId) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 

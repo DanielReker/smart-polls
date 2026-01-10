@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PollRepository
         extends JpaRepository<PollEntity, Long> {
+
+    boolean existsByIdAndOwnerId(Long pollId, Long userId);
+
 }

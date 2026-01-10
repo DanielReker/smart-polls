@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities;
 
+import io.github.danielreker.smartpolls.dao.entities.auth.UserEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.QuestionEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -47,5 +48,9 @@ public class PollEntity {
     @CreatedDate
     @Column(name = "created_date", columnDefinition = "timestamptz", nullable = false)
     private Instant createdDate;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity owner;
 
 }

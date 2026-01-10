@@ -20,9 +20,10 @@ public interface PollMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "questions", ignore = true)
     @Mapping(target = "submissions", ignore = true)
+    @Mapping(target = "owner", ignore = true)
     PollEntity createRequestToEntity(PollCreateRequest request);
 
 
-    PollResponse toResponse(PollEntity entity);
+    PollResponse toResponse(PollEntity entity, Long mySubmissionsCount);
 
 }
