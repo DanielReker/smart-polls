@@ -25,9 +25,9 @@ public class TextAnswerTagEntity {
     @Column(name = "name", columnDefinition = "varchar(255)", nullable = false)
     private String name;
 
-    @Column(name = "embedding", columnDefinition = "vector(4096)", nullable = false)
+    @Column(name = "embedding", columnDefinition = "vector(768)", nullable = false)
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 4096)
+    @Array(length = 768)
     private float[] embedding;
 
 }
