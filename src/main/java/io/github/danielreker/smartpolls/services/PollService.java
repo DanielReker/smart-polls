@@ -4,6 +4,7 @@ import io.github.danielreker.smartpolls.dao.entities.PollEntity;
 import io.github.danielreker.smartpolls.dao.entities.PollStatus;
 import io.github.danielreker.smartpolls.dao.entities.SubmissionEntity;
 import io.github.danielreker.smartpolls.dao.entities.answers.AnswerEntity;
+import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionEntity;
 import io.github.danielreker.smartpolls.dao.repositories.PollRepository;
 import io.github.danielreker.smartpolls.dao.repositories.SubmissionRepository;
 import io.github.danielreker.smartpolls.dao.repositories.questions.TextQuestionRepository;
@@ -260,6 +261,7 @@ public class PollService {
                 .findById(textQuestionId)
                 .filter(textQuestionEntity ->
                         Objects.equals(textQuestionEntity.getPoll().getId(), pollId))
+                .filter(TextQuestionEntity::getNeedAiSummary)
                 .orElseThrow();
 
         aiTextQuestionSummarizerService.summarizeTextQuestion(textQuestionId);

@@ -24,6 +24,9 @@ public class TextQuestionEntity extends QuestionEntity {
     @Column(name = "max_length", columnDefinition = "int4")
     private Integer maxLength;
 
+    @Column(name = "need_ai_summary", columnDefinition = "boolean")
+    private Boolean needAiSummary;
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("count ASC")
     private List<TextQuestionSummaryTagEntity> tags = new ArrayList<>();

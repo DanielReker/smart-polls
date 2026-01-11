@@ -1,6 +1,5 @@
 package io.github.danielreker.smartpolls.web.controllers;
 
-import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.model.auth.AuthenticatedUser;
 import io.github.danielreker.smartpolls.services.AiTextAnswerTaggerService;
 import io.github.danielreker.smartpolls.services.PollService;
@@ -97,19 +96,14 @@ class PollController {
             @RequestBody @Valid SubmissionCreateRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        final SubmissionResponse response = pollService.createSubmission(pollId, request, user);
+        final SubmissionResponse submissionResponse =
+                pollService.createSubmission(pollId, request, user);
 
-        response
-                .getAnswers()
-                .stream()
-                .filter(answerEntity ->
-                        answerEntity.getQuestionType() == QuestionType.TEXT)
-                .forEach(textAnswerEntity ->
-                        aiTextAnswerTaggerService.tagTextAnswer(textAnswerEntity.getId()));
+        aiTextAnswerTaggerService.tagSubmissionTextAnswers(submissionResponse.getId());
 
         return ResponseEntity
                 .ok()
-                .body(response);
+                .body(submissionResponse);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })

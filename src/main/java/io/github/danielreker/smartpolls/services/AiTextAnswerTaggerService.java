@@ -2,7 +2,9 @@ package io.github.danielreker.smartpolls.services;
 
 import io.github.danielreker.smartpolls.dao.entities.answers.TextAnswerEntity;
 import io.github.danielreker.smartpolls.dao.entities.answers.TextAnswerTagEntity;
+import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionEntity;
 import io.github.danielreker.smartpolls.dao.repositories.answers.TextAnswerRepository;
+import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.web.dtos.answers.TextAnswerTagsDto;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -76,14 +78,20 @@ public class AiTextAnswerTaggerService {
         this.textAnswerRepository = textAnswerRepository;
     }
 
-
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void tagTextAnswer(Long textAnswerId) {
-        final TextAnswerEntity textAnswerEntity = textAnswerRepository
-                .findById(textAnswerId)
-                .orElseThrow();
+    public void tagSubmissionTextAnswers(Long submissionId) {
+        textAnswerRepository
+                .findAllBySubmissionId(submissionId)
+                .stream()
+                .filter(answerEntity ->
+                        answerEntity.getQuestionType() == QuestionType.TEXT)
+                .filter(textAnswerEntity ->
+                        ((TextQuestionEntity) textAnswerEntity.getQuestion()).getNeedAiSummary())
+                .forEach(this::tagTextAnswer);
+    }
 
+    private void tagTextAnswer(TextAnswerEntity textAnswerEntity) {
         final List<String> tags = generateTextTags(textAnswerEntity.getValue());
 
         final List<float[]> embeddings = embeddingModel.embed(tags);
