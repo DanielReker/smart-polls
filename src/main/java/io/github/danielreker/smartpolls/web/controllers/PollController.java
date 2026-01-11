@@ -1,6 +1,8 @@
 package io.github.danielreker.smartpolls.web.controllers;
 
+import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.model.auth.AuthenticatedUser;
+import io.github.danielreker.smartpolls.services.AiTextAnswerTaggerService;
 import io.github.danielreker.smartpolls.services.PollService;
 import io.github.danielreker.smartpolls.web.dtos.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 class PollController {
 
     private final PollService pollService;
+
+    private final AiTextAnswerTaggerService aiTextAnswerTaggerService;
+
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping
@@ -94,6 +99,14 @@ class PollController {
     ) {
         final SubmissionResponse response = pollService.createSubmission(pollId, request, user);
 
+        response
+                .getAnswers()
+                .stream()
+                .filter(answerEntity ->
+                        answerEntity.getQuestionType() == QuestionType.TEXT)
+                .forEach(textAnswerEntity ->
+                        aiTextAnswerTaggerService.tagTextAnswer(textAnswerEntity.getId()));
+
         return ResponseEntity
                 .ok()
                 .body(response);
@@ -123,6 +136,19 @@ class PollController {
         return ResponseEntity
                 .ok()
                 .body(response);
+    }
+
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @PostMapping("/{pollId}/questions/{textQuestionId}/ai-summary")
+    public ResponseEntity<Void> summarizeTextQuestion(
+            @PathVariable Long pollId,
+            @PathVariable Long textQuestionId
+    ) {
+        pollService.summarizeTextQuestion(pollId, textQuestionId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 }

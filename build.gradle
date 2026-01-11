@@ -29,6 +29,9 @@ ext {
     set('mapStructVersion', "1.6.3")
     set('lombokMapStructBindingVersion', "0.2.0")
     set('springdocVersion', "2.8.15")
+    set('pgvectorVersion', "0.5.0")
+    set('hibernatePgvectorVersion', "6.6.1.Final")
+    set('apacheCommonsMath3Version', "3.6.1")
 }
 
 dependencies {
@@ -46,6 +49,8 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly "org.hibernate.orm:hibernate-vector:${hibernatePgvectorVersion}"
+    runtimeOnly "com.pgvector:pgvector:${pgvectorVersion}"
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -54,6 +59,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructBindingVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+    implementation "org.apache.commons:commons-math3:${apacheCommonsMath3Version}"
 }
 
 dependencyManagement {

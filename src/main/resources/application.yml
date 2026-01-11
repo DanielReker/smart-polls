@@ -25,6 +25,9 @@ spring:
       chat:
         options:
           model: ${OPENAI_CHAT_MODEL}
+      embedding:
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL}
 
 springdoc:
   swagger-ui:

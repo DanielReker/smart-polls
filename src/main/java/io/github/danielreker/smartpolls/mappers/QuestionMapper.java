@@ -24,6 +24,7 @@ public interface QuestionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "poll", ignore = true)
+    @Mapping(target = "tags", ignore = true)
     TextQuestionEntity toEntity(TextQuestionDto dto);
 
     @Mapping(target = "id", ignore = true)

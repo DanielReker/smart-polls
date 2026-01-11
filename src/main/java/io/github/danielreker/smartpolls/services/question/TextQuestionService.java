@@ -2,12 +2,14 @@ package io.github.danielreker.smartpolls.services.question;
 
 import io.github.danielreker.smartpolls.dao.entities.answers.TextAnswerEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionEntity;
+import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionSummaryTagEntity;
 import io.github.danielreker.smartpolls.dao.repositories.answers.TextAnswerRepository;
 import io.github.danielreker.smartpolls.mappers.QuestionMapper;
 import io.github.danielreker.smartpolls.model.QuestionType;
 import io.github.danielreker.smartpolls.model.exceptions.AnswerValidationException;
 import io.github.danielreker.smartpolls.web.dtos.answers.TextAnswerDto;
 import io.github.danielreker.smartpolls.web.dtos.questions.TextQuestionDto;
+import io.github.danielreker.smartpolls.web.dtos.stats.AiTextQuestionSummaryTagDto;
 import io.github.danielreker.smartpolls.web.dtos.stats.TextQuestionStatsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,20 @@ public class TextQuestionService
                 .builder()
                 .questionId(question.getId())
                 .answerCount(textAnswerRepository.countByQuestionId(question.getId()))
+                .tagsCount(question
+                        .getTags()
+                        .stream()
+                        .map(TextQuestionSummaryTagEntity::getCount)
+                        .reduce(0L, Long::sum))
+                .tags(question
+                        .getTags()
+                        .stream()
+                        .map(tagEntity -> AiTextQuestionSummaryTagDto
+                                .builder()
+                                .tag(tagEntity.getName())
+                                .count(tagEntity.getCount())
+                                .build())
+                        .toList())
                 .build();
     }
 

@@ -1,11 +1,14 @@
 package io.github.danielreker.smartpolls.web.dtos.stats;
 
 import io.github.danielreker.smartpolls.model.QuestionType;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+
+import java.util.List;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -19,6 +22,10 @@ public class TextQuestionStatsDto extends QuestionStatsDto {
         return QuestionType.TEXT;
     }
 
-    // TODO: Add AI summary
+    @NotNull
+    public Long tagsCount;
+
+    @NotNull
+    public List<AiTextQuestionSummaryTagDto> tags;
 
 }
