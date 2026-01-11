@@ -6,6 +6,7 @@ import io.github.danielreker.smartpolls.model.exceptions.InvalidPollStatusExcept
 import io.github.danielreker.smartpolls.web.dtos.ErrorDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,12 @@ class ExceptionHandlerControllerAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidPasswordException.class)
     ErrorDto handleInvalidPasswordException(InvalidPasswordException e) {
+        return new ErrorDto(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ErrorDto handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return new ErrorDto(e.getMessage());
     }
 
