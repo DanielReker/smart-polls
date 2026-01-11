@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/polls")
+@CrossOrigin
 class PollController {
 
     private final PollService pollService;
