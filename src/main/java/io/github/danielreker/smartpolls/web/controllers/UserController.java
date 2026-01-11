@@ -5,6 +5,7 @@ import io.github.danielreker.smartpolls.services.auth.UserService;
 import io.github.danielreker.smartpolls.web.dtos.auth.ChangeCredentialsRequest;
 import io.github.danielreker.smartpolls.web.dtos.auth.LoginRequest;
 import io.github.danielreker.smartpolls.web.dtos.auth.SessionResponse;
+import io.github.danielreker.smartpolls.web.dtos.auth.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -78,6 +79,18 @@ class UserController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getUserMe(
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        final UserResponse response =
+                userService.getUser(user);
+
+        return ResponseEntity
+                .ok(response);
     }
 
 

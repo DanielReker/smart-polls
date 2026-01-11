@@ -2,11 +2,13 @@ package io.github.danielreker.smartpolls.services.auth;
 
 import io.github.danielreker.smartpolls.dao.entities.auth.UserEntity;
 import io.github.danielreker.smartpolls.dao.repositories.auth.UserRepository;
+import io.github.danielreker.smartpolls.mappers.UserMapper;
 import io.github.danielreker.smartpolls.model.auth.AuthenticatedUser;
 import io.github.danielreker.smartpolls.model.exceptions.InvalidPasswordException;
 import io.github.danielreker.smartpolls.web.dtos.auth.ChangeCredentialsRequest;
 import io.github.danielreker.smartpolls.web.dtos.auth.LoginRequest;
 import io.github.danielreker.smartpolls.web.dtos.auth.SessionResponse;
+import io.github.danielreker.smartpolls.web.dtos.auth.UserResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,8 @@ public class UserService {
     private final UserSessionService userSessionService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final UserMapper userMapper;
 
 
     public SessionResponse createUser() {
@@ -97,5 +101,17 @@ public class UserService {
 
     public UserEntity getUserReference(AuthenticatedUser user) {
         return userRepository.getReferenceById(user.getId());
+    }
+
+    public UserResponse getUser(AuthenticatedUser user) {
+        final UserEntity userEntity = userRepository
+                .findById(user.getId())
+                .orElseThrow();
+
+        return userMapper
+                .toResponse(userEntity)
+                .toBuilder()
+                .isRegistered(userEntity.getLogin() != null && userEntity.getPasswordHash() != null)
+                .build();
     }
 }
