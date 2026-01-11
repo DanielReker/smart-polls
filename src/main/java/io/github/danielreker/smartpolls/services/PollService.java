@@ -59,7 +59,6 @@ public class PollService {
     private final AiTextQuestionSummarizerService aiTextQuestionSummarizerService;
 
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_REGISTERED')")
     public PollResponse createPoll(
             PollCreateRequest request,
             AuthenticatedUser user

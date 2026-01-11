@@ -46,8 +46,7 @@ class PollController {
         final PollResponse response = pollService.getPoll(pollId, user);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -60,8 +59,7 @@ class PollController {
         final PollResponse response = pollService.upsertQuestions(pollId, request, user);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -73,8 +71,7 @@ class PollController {
         final PollResponse response = pollService.startPoll(pollId, user);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -86,8 +83,7 @@ class PollController {
         final PollResponse response = pollService.finishPoll(pollId, user);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -103,8 +99,7 @@ class PollController {
         aiTextAnswerTaggerService.tagSubmissionTextAnswers(submissionResponse.getId());
 
         return ResponseEntity
-                .ok()
-                .body(submissionResponse);
+                .ok(submissionResponse);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -115,8 +110,7 @@ class PollController {
         final StatsResponse response = pollService.getStats(pollId);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
@@ -129,8 +123,7 @@ class PollController {
         final PollResponse response = pollService.aiGenerateQuestions(pollId, request, user);
 
         return ResponseEntity
-                .ok()
-                .body(response);
+                .ok(response);
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
