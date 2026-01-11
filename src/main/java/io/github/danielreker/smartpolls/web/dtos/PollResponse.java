@@ -3,6 +3,7 @@ package io.github.danielreker.smartpolls.web.dtos;
 import io.github.danielreker.smartpolls.dao.entities.PollStatus;
 import io.github.danielreker.smartpolls.web.dtos.questions.QuestionDto;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,6 +35,7 @@ public class PollResponse {
     PollStatus status;
 
     @NotNull
+    @Valid
     List<QuestionDto> questions;
 
     @NotNull

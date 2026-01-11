@@ -1,6 +1,7 @@
 package io.github.danielreker.smartpolls.web.dtos.stats;
 
 import io.github.danielreker.smartpolls.model.QuestionType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class TextQuestionStatsDto extends QuestionStatsDto {
     public Long tagsCount;
 
     @NotNull
+    @Valid
     public List<AiTextQuestionSummaryTagDto> tags;
 
 }

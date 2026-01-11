@@ -1,6 +1,7 @@
 package io.github.danielreker.smartpolls.web.dtos.questions;
 
 import io.github.danielreker.smartpolls.model.QuestionType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class MultiChoiceQuestionDto extends QuestionDto {
     }
 
     @NotNull
+    @Valid
     private final List<ChoiceDto> possibleChoices;
 
 }
