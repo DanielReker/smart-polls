@@ -13,6 +13,9 @@ import java.util.List;
 public class StatsResponse {
 
     @NotNull
+    Long submissionsCount;
+
+    @NotNull
     @Valid
     List<QuestionStatsDto> stats;
 

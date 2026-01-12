@@ -8,4 +8,6 @@ public interface SubmissionRepository
 
     Long countByOwnerIdAndPollId(Long userId, Long pollId);
 
+    Long countByPollId(Long pollId);
+
 }

@@ -219,8 +219,12 @@ public class PollService {
     public StatsResponse getStats(Long pollId) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
+        final Long submissionsCount = submissionRepository
+                .countByPollId(pollId);
+
         return StatsResponse
                 .builder()
+                .submissionsCount(submissionsCount)
                 .stats(pollEntity
                         .getQuestions()
                         .stream()
