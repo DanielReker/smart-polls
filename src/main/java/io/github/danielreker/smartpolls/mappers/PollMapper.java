@@ -3,6 +3,7 @@ package io.github.danielreker.smartpolls.mappers;
 import io.github.danielreker.smartpolls.dao.entities.PollEntity;
 import io.github.danielreker.smartpolls.web.dtos.PollCreateRequest;
 import io.github.danielreker.smartpolls.web.dtos.PollResponse;
+import io.github.danielreker.smartpolls.web.dtos.ShortPollResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -25,5 +26,7 @@ public interface PollMapper {
 
 
     PollResponse toResponse(PollEntity entity, Long mySubmissionsCount);
+
+    ShortPollResponse toShortResponse(PollEntity entity);
 
 }

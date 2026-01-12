@@ -273,4 +273,14 @@ public class PollService {
                 .orElseThrow(() -> new EntityNotFoundException("Poll with id " + pollId + " not found"));
     }
 
+    public PollsResponse getUserPolls(AuthenticatedUser user) {
+        return PollsResponse
+                .builder()
+                .polls(pollRepository
+                        .findByOwnerId(user.getId())
+                        .stream()
+                        .map(pollMapper::toShortResponse)
+                        .toList())
+                .build();
+    }
 }

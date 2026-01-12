@@ -139,4 +139,15 @@ class PollController {
                 .build();
     }
 
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @GetMapping("/my")
+    public ResponseEntity<PollsResponse> getMyPolls(
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        final PollsResponse response = pollService.getUserPolls(user);
+
+        return ResponseEntity
+                .ok(response);
+    }
+
 }
