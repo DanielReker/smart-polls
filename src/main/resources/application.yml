@@ -23,9 +23,13 @@ spring:
       base-url: ${OPENAI_URL}
       api-key: ${OPENAI_API_KEY}
       chat:
+        api-key: ${OPENAI_CHAT_API_KEY}
+        base-url: ${OPENAI_CHAT_URL}
         options:
           model: ${OPENAI_CHAT_MODEL}
       embedding:
+        api-key: ${OPENAI_EMBEDDING_API_KEY}
+        base-url: ${OPENAI_EMBEDDING_URL}
         options:
           model: ${OPENAI_EMBEDDING_MODEL}
 

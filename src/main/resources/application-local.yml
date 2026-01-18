@@ -11,11 +11,12 @@ spring:
 
   ai:
     openai:
-      base-url: ${OPENAI_URL:http://localhost:11435}
       chat:
+        base-url: ${OPENAI_CHAT_URL:http://localhost:11435}
         options:
           model: ${OPENAI_CHAT_MODEL:gemma3:4b}
       embedding:
+        base-url: ${OPENAI_EMBEDDING_URL:http://localhost:11435}
         options:
           model: ${OPENAI_EMBEDDING_MODEL:embeddinggemma:300m}
 
