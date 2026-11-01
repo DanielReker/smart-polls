@@ -17,74 +17,71 @@ import java.util.Objects;
 public class AiQuestionGeneratorService {
 
     private static final String SYSTEM_PROMPT = """
-            You are given a list of poll current questions and a prompt.
-            You must update given questions (or generate them from scratch \
-            if there's currently no questions), i.e. change old ones or \
-            generate new, based on user's prompt.
-            Output complete list of updated questions as JSON in same format as input \
-            (but you should leave new question IDs null, because they will be recreated \
-            anyway and your IDs will be ignored)
-            There are multiple types of questions: "text", "single-choice", "multi-choice". \
-            Question's type is encoded in JSON field "dtype".
-            Here are JSON examples of question types with explanations:
-            "single-choice" - question with pre-defined options that asks user \
-            to select one of that options.
-            {
-              "id": null,
-              "name": "Single choice question name",
-              "description": "More detailed single choice question description if necessary", // nullable, shouldn't be overused
-              "isRequired": true, // is answer to that question mandatory
-              "position": 0, // question position in poll, used to sort questions on UI
-              "dtype": "single-choice",
-              "possibleChoices": [
+            Тебе предоставлен список текущих вопросов опроса и промпт (запрос пользователя).
+            Ты должен обновить эти вопросы (или сгенерировать их с нуля, если в данный момент вопросов нет), то есть изменить старые или сгенерировать новые на основе пользовательского промпта.
+            Выведи полный список обновленных вопросов в формате JSON в том же виде, что и на входе (но тебе следует оставить ID новых вопросов как null, потому что они в любом случае будут созданы заново, а твои ID будут проигнорированы).
+            Существует несколько типов вопросов: "text", "single-choice", "multi-choice".
+            Тип вопроса указывается в JSON-поле "dtype".
+            
+            Вот JSON-примеры типов вопросов с объяснениями:
+
+            "single-choice" - вопрос с заранее заданными вариантами, где пользователя просят выбрать один из них (вопрос с одиночным выбором).
                 {
-                  "id": null,
-                  "name": "Option 1",
-                  "position": 0 // option position in question, used to sort options on UI
-                },
-                {
-                  "id": null,
-                  "name": "Option 2",
-                  "position": 1
-                }
-              ]
+                "id": null,
+                "name": "Название вопроса с одиночным выбором",
+                "description": "Более подробное описание вопроса с одиночным выбором, если необходимо", // может быть null, не стоит злоупотреблять, заполняй только в том случае, если без развёрнутого описания действительно не понятна суть вопроса
+                "isRequired": true, // является ли ответ на этот вопрос обязательным для респондента
+                "position": 0, // позиция вопроса в опросе, используется для сортировки на UI
+                "dtype": "single-choice",
+                "possibleChoices": [
+                    {
+                        "id": null,
+                        "name": "Вариант 1",
+                        "position": 0 // позиция варианта ответа в вопросе, используется для сортировки на UI
+                    },
+                    {
+                        "id": null,
+                        "name": "Вариант 2",
+                        "position": 1
+                    }
+                ]
             }
-            "multi-choice" - question with pre-defined options that asks user \
-            to select multiple of that options.
+
+            "multi-choice" - вопрос с заранее заданными вариантами, где пользователя просят выбрать несколько из них (вопрос с множественным выбором).
             {
-              "id": null,
-              "name": "Multi choice question name",
-              "description": "More detailed multi choice question description if necessary", // nullable, shouldn't be overused
-              "isRequired": true, // is answer to that question mandatory
-              "position": 0, // question position in poll, used to sort questions on UI
-              "dtype": "multi-choice",
-              "possibleChoices": [
-                {
-                  "id": null,
-                  "name": "Option 1",
-                  "position": 0 // option position in question, used to sort options on UI
-                },
-                {
-                  "id": null,
-                  "name": "Option 2",
-                  "position": 1
-                }
-              ]
+                "id": null,
+                "name": "Название вопроса с множественным выбором",
+                "description": "Более детальное описание вопроса с множественным выбором, если необходимо", // может быть null, не стоит злоупотреблять, заполняй только в том случае, если без развёрнутого описания действительно не понятна суть вопроса
+                "isRequired": true, // является ли ответ на этот вопрос обязательным для респондента
+                "position": 0, // позиция вопроса в опросе, используется для сортировки в UI
+                "dtype": "multi-choice",
+                "possibleChoices": [
+                    {
+                        "id": null,
+                        "name": "Вариант 1",
+                        "position": 0 // позиция варианта ответа в вопросе, используется для сортировки в UI
+                    },
+                    {
+                        "id": null,
+                        "name": "Вариант 2",
+                        "position": 1
+                    }
+                ]
             }
-            "text" - open-ended text field question, used for requesting from users information in free form
+
+            "text" - вопрос с открытым текстовым полем, используется для запроса у пользователей информации в свободной форме (текстовый вопрос).
             {
-              "id": null,
-              "name": "Text question name",
-              "description": "More detailed text question description if necessary", // nullable, shouldn't be overused
-              "isRequired": true, // is answer to that question mandatory
-              "position": 0, // question position in poll, used to sort questions on UI
-              "dtype": "text",
-              "maxLength": 200 // max length of answer, nullable
+                "id": null,
+                "name": "Название текстового вопроса",
+                "description": "Более детальное описание текстового вопроса, если необходимо", // может быть null, не стоит злоупотреблять, заполняй только в том случае, если без развёрнутого описания действительно не понятна суть вопроса
+                "isRequired": true, // является ли ответ на этот вопрос обязательным для респондента
+                "position": 0, // позиция вопроса в опросе, используется для сортировки на UI
+                "dtype": "text",
+                "maxLength": 200 // максимальная длина ответа, может быть null (если длина ответа не ограничена)
             }
-            Note that question dtypes JSON bodies are polymorphic and contain slightly different fields depending on \
-            question type - that's completely OK as  questions of different dtypes contain different data.
-            Generate questions using different dtypes: "text", "single-choice", "multi-choice"; \
-            don't overuse single one
+
+            Обрати внимание, что JSON-тела с разными `dtype` полиморфны и содержат немного отличающиеся поля в зависимости от типа вопроса — это абсолютно нормально, так как вопросы разных `dtype` содержат разные данные.
+            Генерируй вопросы, используя разные `dtype`: "text", "single-choice", "multi-choice"; не злоупотребляй каким-то одним из них.
             """;
 
     private final ChatClient chatClient;

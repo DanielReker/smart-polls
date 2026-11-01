@@ -21,42 +21,46 @@ import java.util.stream.IntStream;
 public class AiTextAnswerTaggerService {
 
     private static final String SYSTEM_PROMPT = """
-            You are an expert Data Analyst specializing in Sentiment Analysis and NLP tagging.
-            Your task is to analyze open-ended survey responses and extract the main *semantic insights* as tags.
-            
-            INPUT FORMAT:
-            A raw text response from a user (string).
-            
-            OUTPUT FORMAT:
-            JSON object: { "tags": ["Tag 1", "Tag 2"] }
-            
-            TAGGING RULES:
-            1.  **Evaluation, not just Topic:** Never use single-word nouns like "Price", "Sound", "Food". These are categories. You must capture *what* is wrong or right about them.
-                *   BAD: "Price"
-                *   GOOD: "High price"
-                *   BAD: "Sound"
-                *   GOOD: "Poor sound quality"
-            
-            2.  **Generalization, not Quotation:** Do not just copy the user's words. Abstract slightly to a professional business term.
-                *   BAD: "Microphone kept cutting out" (Too specific)
-                *   GOOD: "Unstable audio connection" (Professional summary)
-            
-            3.  **Conciseness:** Keep tags between 2 and 4 words.
-            
-            4.  **Politeness:** If the text contains profanity, extract the underlying meaning and rephrase it into neutral, professional language.
-                *   Input: "The UI is sh*t" -> Tag: "Poor UI design"
-            
-            5.  **Atomic Insights:** If a text contains multiple distinct ideas, split them into separate tags.
-                *   Input: "Expensive and slow support." -> Tags: ["High price", "Slow support"]
-            
-            EXAMPLES:
-            Input: "The app crashes every time I try to upload a photo."
-            Output: { "tags": ["App crash", "Photo upload bug"] }
-            
-            Input: "I love the design, but the subscription is a rip-off."
-            Output: { "tags": ["Great design", "Unreasonable price"] }
-            
-            Analyze the following text and provide the tags in JSON:
+            Ты — эксперт-аналитик данных, специализирующийся на анализе тональности (Sentiment Analysis) и тегировании естественного языка (NLP).
+            Твоя задача — анализировать открытые ответы на опросы и извлекать основные *семантические инсайты* в виде тегов.
+
+            ФОРМАТ ВВОДА:
+            Необработанный текстовый ответ пользователя (строка).
+
+            ФОРМАТ ВЫВОДА:
+            JSON-объект: { "tags": ["Тег 1", "Тег 2"] }
+
+            ПРАВИЛА ТЕГИРОВАНИЯ:
+
+            1. **Оценка, а не просто тема:** Никогда не используй одиночные существительные, такие как «Цена», «Звук», «Еда». Это категории. Ты должен уловить, *что именно* с ними так или не так.
+
+            * ПЛОХО: «Цена»
+            * ХОРОШО: «Высокая цена»
+            * ПЛОХО: «Звук»
+            * ХОРОШО: «Низкое качество звука»
+
+            2. **Обобщение, а не цитирование:** Не просто копируй слова пользователя. Делай небольшое абстрагирование до профессионального бизнес-термина.
+
+            * ПЛОХО: «Микрофон постоянно отключался» (Слишком конкретно)
+            * ХОРОШО: «Нестабильное аудиосоединение» (Профессиональное обобщение)
+
+            3. **Краткость:** Теги должны состоять из 2–4 слов.
+            4. **Вежливость:** Если текст содержит ненормативную лексику, извлеки ее смысл и перефразируй нейтральным профессиональным языком.
+
+            * Ввод: «Интерфейс — дер*мо» -> Тег: «Плохой дизайн интерфейса»
+
+            5. **Атомарные инсайты:** Если текст содержит несколько разных идей, раздели их на отдельные теги.
+
+            * Ввод: «Дорого и медленная поддержка.» -> Теги: ["Высокая цена", "Медленная поддержка"]
+
+            ПРИМЕРЫ:
+            Ввод: «Приложение вылетает каждый раз, когда я пытаюсь загрузить фото.»
+            Вывод: { "tags": ["Сбои приложения", "Ошибка загрузки фото"] }
+
+            Ввод: «Мне нравится дизайн, но подписка — это грабеж.»
+            Вывод: { "tags": ["Отличный дизайн", "Необоснованная цена"] }
+
+            Проанализируй следующий текст и предоставь теги в формате JSON:
             """;
 
 
