@@ -1,13 +1,12 @@
 package io.github.danielreker.smartpolls.dao.entities.questions;
 
 import io.github.danielreker.smartpolls.model.QuestionType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,12 +22,5 @@ public class TextQuestionEntity extends QuestionEntity {
 
     @Column(name = "max_length", columnDefinition = "int4")
     private Integer maxLength;
-
-    @Column(name = "need_ai_summary", columnDefinition = "boolean")
-    private Boolean needAiSummary;
-
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("count ASC")
-    private List<TextQuestionSummaryTagEntity> tags = new ArrayList<>();
 
 }

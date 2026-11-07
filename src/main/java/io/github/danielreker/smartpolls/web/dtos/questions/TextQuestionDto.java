@@ -8,8 +8,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @SuperBuilder(toBuilder = true)
 @Jacksonized
@@ -24,8 +22,5 @@ public class TextQuestionDto extends QuestionDto {
 
     @Nullable
     private Integer maxLength;
-
-    @NotNull
-    private Boolean needAiSummary;
 
 }

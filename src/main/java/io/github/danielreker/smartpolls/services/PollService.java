@@ -4,10 +4,8 @@ import io.github.danielreker.smartpolls.dao.entities.PollEntity;
 import io.github.danielreker.smartpolls.dao.entities.PollStatus;
 import io.github.danielreker.smartpolls.dao.entities.SubmissionEntity;
 import io.github.danielreker.smartpolls.dao.entities.answers.AnswerEntity;
-import io.github.danielreker.smartpolls.dao.entities.questions.TextQuestionEntity;
 import io.github.danielreker.smartpolls.dao.repositories.PollRepository;
 import io.github.danielreker.smartpolls.dao.repositories.SubmissionRepository;
-import io.github.danielreker.smartpolls.dao.repositories.questions.TextQuestionRepository;
 import io.github.danielreker.smartpolls.mappers.PollMapper;
 import io.github.danielreker.smartpolls.mappers.QuestionMapper;
 import io.github.danielreker.smartpolls.mappers.SubmissionMapper;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,10 +50,6 @@ public class PollService {
     private final QuestionMapper questionMapper;
 
     private final AiQuestionGeneratorService aiQuestionGeneratorService;
-
-    private final TextQuestionRepository textQuestionRepository;
-
-    private final AiTextQuestionSummarizerService aiTextQuestionSummarizerService;
 
 
     public PollResponse createPoll(
@@ -256,19 +249,6 @@ public class PollService {
                 .build();
 
         return upsertQuestions(pollId, pollQuestionsUpsertRequest, user);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
-    public void summarizeTextQuestion(Long pollId, Long textQuestionId) {
-        textQuestionRepository
-                .findById(textQuestionId)
-                .filter(textQuestionEntity ->
-                        Objects.equals(textQuestionEntity.getPoll().getId(), pollId))
-                .filter(TextQuestionEntity::getNeedAiSummary)
-                .orElseThrow();
-
-        aiTextQuestionSummarizerService.summarizeTextQuestion(textQuestionId);
-
     }
 
     private PollEntity findPollEntityById(Long pollId) {
