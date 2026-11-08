@@ -1,6 +1,5 @@
 package io.github.danielreker.smartpolls.services.question;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.danielreker.smartpolls.web.dtos.questions.QuestionDto;
 import io.github.danielreker.smartpolls.web.dtos.questions.QuestionListDto;
 import lombok.SneakyThrows;
@@ -9,6 +8,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Objects;
@@ -86,13 +86,13 @@ public class AiQuestionGeneratorService {
 
     private final ChatClient chatClient;
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public AiQuestionGeneratorService(ChatClient.Builder chatClientBuilder, ObjectMapper objectMapper) {
+    public AiQuestionGeneratorService(ChatClient.Builder chatClientBuilder, JsonMapper jsonMapper) {
         this.chatClient = chatClientBuilder
                 .defaultSystem(SYSTEM_PROMPT)
                 .build();
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
 
@@ -109,7 +109,7 @@ public class AiQuestionGeneratorService {
                         .messages(List.of(
                                 UserMessage
                                         .builder()
-                                        .text("Current questions: " + objectMapper.writeValueAsString(oldQuestionList))
+                                        .text("Current questions: " + jsonMapper.writeValueAsString(oldQuestionList))
                                         .build(),
                                 UserMessage
                                         .builder()

@@ -5,9 +5,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 @Value
 @Builder(toBuilder = true)
+@Jacksonized
 public class ChoiceDto {
 
     @Nullable

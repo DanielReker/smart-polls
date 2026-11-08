@@ -2,6 +2,7 @@ package io.github.danielreker.smartpolls.model.auth;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 
 @Value
 @Builder(toBuilder = true)
+@Jacksonized
 public class SessionToken {
 
     private static final Pattern RAW_TOKEN_PATTERN =

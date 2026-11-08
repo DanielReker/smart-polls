@@ -28,7 +28,8 @@ public class TextQuestionService
 
     @Override
     public TextAnswerEntity buildConcreteAnswer(TextQuestionEntity question, TextAnswerDto answerDto) {
-        if (answerDto.getValue().length() > question.getMaxLength()) {
+        if (question.getMaxLength() != null &&
+                answerDto.getValue().length() > question.getMaxLength()) {
             throw new AnswerValidationException("Answer to question with id " + question.getId() +
                     " must not be longer than " + question.getMaxLength() + " symbols");
         }
