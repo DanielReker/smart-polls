@@ -1,7 +1,8 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.9'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.5.16'
 }
 
 group = 'io.github.danielreker'
@@ -29,12 +30,17 @@ ext {
     set('mapStructVersion', "1.6.3")
     set('lombokMapStructBindingVersion', "0.2.0")
     set('springdocVersion', "2.8.15")
-    set('pgvectorVersion', "0.5.0")
+    set('pgvectorVersion', "0.1.6")
     set('hibernatePgvectorVersion', "6.6.1.Final")
-    set('apacheCommonsMath3Version', "3.6.1")
 }
 
 dependencies {
+    implementation platform(SpringBootPlugin.BOM_COORDINATES)
+    compileOnly platform(SpringBootPlugin.BOM_COORDINATES)
+    annotationProcessor platform(SpringBootPlugin.BOM_COORDINATES)
+    developmentOnly platform(SpringBootPlugin.BOM_COORDINATES)
+    implementation platform("org.springframework.ai:spring-ai-bom:${springAiVersion}")
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -59,13 +65,9 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapStructBindingVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
-    implementation "org.apache.commons:commons-math3:${apacheCommonsMath3Version}"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
-    }
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
 }
 
 tasks.named('test') {
