@@ -36,4 +36,9 @@ springdoc:
     enabled: false
   api-docs:
     enabled: false
-
+  model-converters:
+    polymorphic-converter:
+      enabled: true
+      one-of-as-ref: true
+      one-of-ref-suffix: Variant
+  writer-with-order-by-keys: true

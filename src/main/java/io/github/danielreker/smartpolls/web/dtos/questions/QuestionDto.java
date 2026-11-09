@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.danielreker.smartpolls.model.QuestionType;
+import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +25,13 @@ import lombok.experimental.SuperBuilder;
         @JsonSubTypes.Type(value = SingleChoiceQuestionDto.class, name = QuestionType.Names.SINGLE_CHOICE),
         @JsonSubTypes.Type(value = MultiChoiceQuestionDto.class, name = QuestionType.Names.MULTI_CHOICE),
 })
+@Schema(
+        discriminatorMapping = {
+                @DiscriminatorMapping(value = QuestionType.Names.TEXT, schema = TextQuestionDto.class),
+                @DiscriminatorMapping(value = QuestionType.Names.SINGLE_CHOICE, schema = SingleChoiceQuestionDto.class),
+                @DiscriminatorMapping(value = QuestionType.Names.MULTI_CHOICE, schema = MultiChoiceQuestionDto.class),
+        }
+)
 @Getter
 @SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = false)
