@@ -13,6 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Value
 @Builder(toBuilder = true)
@@ -20,7 +21,7 @@ import java.util.List;
 public class PollResponse {
 
     @NotNull
-    Long id;
+    UUID id;
 
     @NotNull
     Instant createdDate;

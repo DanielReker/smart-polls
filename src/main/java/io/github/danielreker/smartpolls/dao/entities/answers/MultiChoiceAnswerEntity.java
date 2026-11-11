@@ -27,7 +27,8 @@ public class MultiChoiceAnswerEntity extends AnswerEntity {
     @JoinTable(
             name = "answer_choice",
             joinColumns = @JoinColumn(name = "answer_id"),
-            inverseJoinColumns = @JoinColumn(name = "choice_id")
+            inverseJoinColumns = @JoinColumn(name = "choice_id"),
+            indexes = @Index(name = "idx_answer_choice_answer_id", columnList = "answer_id")
     )
     @OrderBy("position ASC")
     private List<ChoiceEntity> selectedChoices = new ArrayList<>();

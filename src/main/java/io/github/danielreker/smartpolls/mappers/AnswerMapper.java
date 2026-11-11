@@ -12,6 +12,7 @@ import io.github.danielreker.smartpolls.web.dtos.answers.TextAnswerDto;
 import org.mapstruct.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
@@ -29,14 +30,14 @@ public interface AnswerMapper {
     TextAnswerDto toDto(TextAnswerEntity entity);
 
     @Mapping(target = "questionId", source = "question.id")
-    @Mapping(target = "selectedChoiceId", source = "selectedChoice")
+    @Mapping(target = "selectedChoiceId", source = "selectedChoice.id")
     SingleChoiceAnswerDto toDto(SingleChoiceAnswerEntity entity);
 
     @Mapping(target = "questionId", source = "question.id")
     @Mapping(target = "selectedChoiceIds", source = "selectedChoices")
     MultiChoiceAnswerDto toDto(MultiChoiceAnswerEntity entity);
 
-    default Long choiceEntityToId(ChoiceEntity choiceEntity) {
+    default UUID choiceEntityToId(ChoiceEntity choiceEntity) {
         return Optional
                 .ofNullable(choiceEntity)
                 .map(ChoiceEntity::getId)

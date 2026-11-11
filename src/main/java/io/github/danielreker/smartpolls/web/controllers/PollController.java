@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/polls")
@@ -37,7 +39,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/{pollId}")
     public ResponseEntity<PollResponse> getPoll(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         final PollResponse response = pollService.getPoll(pollId, user);
@@ -49,7 +51,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PutMapping("/{pollId}/questions")
     public ResponseEntity<PollResponse> upsertQuestions(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @RequestBody @Valid PollQuestionsUpsertRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
@@ -62,7 +64,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/{pollId}/requests/start")
     public ResponseEntity<PollResponse> startPoll(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         final PollResponse response = pollService.startPoll(pollId, user);
@@ -74,7 +76,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/{pollId}/requests/finish")
     public ResponseEntity<PollResponse> finishPoll(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
         final PollResponse response = pollService.finishPoll(pollId, user);
@@ -86,7 +88,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/{pollId}/submissions")
     public ResponseEntity<SubmissionResponse> createSubmission(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @RequestBody @Valid SubmissionCreateRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
@@ -100,7 +102,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @GetMapping("/{pollId}/stats")
     public ResponseEntity<StatsResponse> getStats(
-            @PathVariable Long pollId
+            @PathVariable UUID pollId
     ) {
         final StatsResponse response = pollService.getStats(pollId);
 
@@ -111,7 +113,7 @@ class PollController {
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     @PostMapping("/{pollId}/questions:ai-generate")
     public ResponseEntity<PollResponse> aiGenerateQuestions(
-            @PathVariable Long pollId,
+            @PathVariable UUID pollId,
             @RequestBody @Valid AiGenerateQuestionsRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {

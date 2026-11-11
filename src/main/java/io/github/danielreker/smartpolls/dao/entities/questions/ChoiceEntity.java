@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities.questions;
 
+import io.github.danielreker.smartpolls.dao.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +10,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "choice")
-public class ChoiceEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@Table(
+        name = "choice",
+        indexes = @Index(name = "idx_choice_question_id", columnList = "question_id")
+)
+public class ChoiceEntity extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "question_id", nullable = false)

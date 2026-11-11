@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities.questions;
 
+import io.github.danielreker.smartpolls.dao.entities.BaseEntity;
 import io.github.danielreker.smartpolls.dao.entities.PollEntity;
 import io.github.danielreker.smartpolls.model.QuestionType;
 import jakarta.persistence.*;
@@ -10,15 +11,13 @@ import org.hibernate.Length;
 @Setter
 @Getter
 @Entity
-@Table(name = "question")
+@Table(
+        name = "question",
+        indexes = @Index(name = "idx_question_poll_id", columnList = "poll_id")
+)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-public abstract class QuestionEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public abstract class QuestionEntity extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "poll_id", nullable = false)

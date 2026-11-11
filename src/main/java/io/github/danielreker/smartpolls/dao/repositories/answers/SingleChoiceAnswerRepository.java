@@ -4,16 +4,18 @@ import io.github.danielreker.smartpolls.dao.entities.answers.SingleChoiceAnswerE
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface SingleChoiceAnswerRepository
-        extends JpaRepository<SingleChoiceAnswerEntity, Long> {
+import java.util.UUID;
 
-    Long countByQuestionId(Long questionId);
+public interface SingleChoiceAnswerRepository
+        extends JpaRepository<SingleChoiceAnswerEntity, UUID> {
+
+    Long countByQuestionId(UUID questionId);
 
     @Query(value = """
         SELECT count(mca)
         FROM SingleChoiceAnswerEntity mca
         WHERE mca.selectedChoice.id = :choiceId
         """)
-    Long countChoiceSelectionsByChoiceId(Long choiceId);
+    Long countChoiceSelectionsByChoiceId(UUID choiceId);
 
 }

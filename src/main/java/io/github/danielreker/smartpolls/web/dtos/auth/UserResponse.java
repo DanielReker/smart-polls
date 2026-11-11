@@ -7,13 +7,14 @@ import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 @Jacksonized
 public record UserResponse(
 
         @NotNull
-        Long id,
+        UUID id,
 
         @Nullable
         String login,

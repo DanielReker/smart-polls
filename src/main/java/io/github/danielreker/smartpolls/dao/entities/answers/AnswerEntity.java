@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities.answers;
 
+import io.github.danielreker.smartpolls.dao.entities.BaseEntity;
 import io.github.danielreker.smartpolls.dao.entities.SubmissionEntity;
 import io.github.danielreker.smartpolls.dao.entities.questions.QuestionEntity;
 import io.github.danielreker.smartpolls.model.QuestionType;
@@ -12,15 +13,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "answer")
+@Table(
+        name = "answer",
+        indexes = @Index(name = "idx_answer_submission_id", columnList = "submission_id")
+)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-public abstract class AnswerEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public abstract class AnswerEntity extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "submission_id", nullable = false)

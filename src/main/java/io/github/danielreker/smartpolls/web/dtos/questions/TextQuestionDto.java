@@ -21,6 +21,6 @@ public class TextQuestionDto extends QuestionDto {
     }
 
     @Nullable
-    private Integer maxLength;
+    private final Integer maxLength;
 
 }

@@ -18,14 +18,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "poll")
+@Table(
+        name = "poll",
+        indexes = @Index(name = "idx_poll_owner_id", columnList = "owner_id")
+)
 @EntityListeners(AuditingEntityListener.class)
-public class PollEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class PollEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "poll", orphanRemoval = true, cascade = CascadeType.ALL)
     @OrderBy("position ASC")

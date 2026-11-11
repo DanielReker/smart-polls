@@ -4,10 +4,12 @@ import io.github.danielreker.smartpolls.dao.entities.answers.MultiChoiceAnswerEn
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface MultiChoiceAnswerRepository
-        extends JpaRepository<MultiChoiceAnswerEntity, Long> {
+import java.util.UUID;
 
-    Long countByQuestionId(Long questionId);
+public interface MultiChoiceAnswerRepository
+        extends JpaRepository<MultiChoiceAnswerEntity, UUID> {
+
+    Long countByQuestionId(UUID questionId);
 
     @Query(value = """
         SELECT count(mca)
@@ -15,6 +17,6 @@ public interface MultiChoiceAnswerRepository
         JOIN mca.selectedChoices sc
         WHERE sc.id = :choiceId
         """)
-    Long countChoiceSelectionsByChoiceId(Long choiceId);
+    Long countChoiceSelectionsByChoiceId(UUID choiceId);
 
 }

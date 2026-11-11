@@ -8,6 +8,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.UUID;
+
 @Getter
 @SuperBuilder(toBuilder = true)
 @Jacksonized
@@ -21,6 +23,6 @@ public class SingleChoiceAnswerDto extends AnswerDto {
     }
 
     @NotNull
-    private Long selectedChoiceId;
+    private UUID selectedChoiceId;
 
 }

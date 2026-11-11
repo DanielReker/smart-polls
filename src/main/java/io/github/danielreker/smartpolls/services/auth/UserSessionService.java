@@ -70,7 +70,7 @@ public class UserSessionService {
         userSessionRepository.deleteByTokenId(tokenId);
     }
 
-    public void deleteAllSessionsByUserId(Long userId) {
+    public void deleteAllSessionsByUserId(UUID userId) {
         userSessionRepository.deleteAllByUserId(userId);
     }
 }

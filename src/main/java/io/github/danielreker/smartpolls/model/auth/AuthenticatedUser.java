@@ -12,7 +12,7 @@ import java.util.UUID;
 @Jacksonized
 public class AuthenticatedUser {
 
-    Long id;
+    UUID id;
 
     UUID tokenId;
 

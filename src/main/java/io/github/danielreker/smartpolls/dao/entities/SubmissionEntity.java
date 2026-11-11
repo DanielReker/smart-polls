@@ -15,14 +15,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "submission")
+@Table(
+        name = "submission",
+        indexes = @Index(name = "idx_submission_poll_id", columnList = "poll_id")
+)
 @EntityListeners(AuditingEntityListener.class)
-public class SubmissionEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class SubmissionEntity extends BaseEntity {
 
     @CreatedDate
     @Column(name = "created_date", columnDefinition = "timestamptz", nullable = false)

@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities.auth;
 
+import io.github.danielreker.smartpolls.dao.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "user_session")
 @EntityListeners(AuditingEntityListener.class)
-public class UserSessionEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class UserSessionEntity extends BaseEntity {
 
     @Column(name = "created_date", nullable = false)
     private Instant createdDate;

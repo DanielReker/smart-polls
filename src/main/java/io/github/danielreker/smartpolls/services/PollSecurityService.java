@@ -5,6 +5,8 @@ import io.github.danielreker.smartpolls.dao.repositories.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class PollSecurityService {
@@ -14,11 +16,11 @@ public class PollSecurityService {
     private final SubmissionRepository submissionRepository;
 
 
-    public boolean isUserPollOwner(Long userId, Long pollId) {
+    public boolean isUserPollOwner(UUID userId, UUID pollId) {
         return pollRepository.existsByIdAndOwnerId(pollId, userId);
     }
 
-    public Long countUserSubmissionsToPoll(Long userId, Long pollId) {
+    public Long countUserSubmissionsToPoll(UUID userId, UUID pollId) {
         return submissionRepository.countByOwnerIdAndPollId(userId, pollId);
     }
 

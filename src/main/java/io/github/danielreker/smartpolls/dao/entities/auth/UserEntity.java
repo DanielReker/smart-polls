@@ -1,5 +1,6 @@
 package io.github.danielreker.smartpolls.dao.entities.auth;
 
+import io.github.danielreker.smartpolls.dao.entities.BaseEntity;
 import io.github.danielreker.smartpolls.dao.entities.PollEntity;
 import io.github.danielreker.smartpolls.dao.entities.SubmissionEntity;
 import io.github.danielreker.smartpolls.model.auth.UserRole;
@@ -18,14 +19,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users", // "user" is a PostgreSQL keyword, so "users"
+        indexes = @Index(name = "idx_users_login", columnList = "login", unique = true)
+)
 @EntityListeners(AuditingEntityListener.class)
-public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class UserEntity extends BaseEntity {
 
     @CreatedDate
     @Column(name = "created_date", columnDefinition = "timestamptz", nullable = false)

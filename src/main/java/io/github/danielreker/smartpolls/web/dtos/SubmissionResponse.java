@@ -7,15 +7,16 @@ import lombok.Value;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Value
 public class SubmissionResponse {
 
     @NotNull
-    Long id;
+    UUID id;
 
     @NotNull
-    Long pollId;
+    UUID pollId;
 
     @NotNull
     Instant createdDate;

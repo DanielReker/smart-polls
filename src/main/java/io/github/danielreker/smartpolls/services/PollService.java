@@ -22,10 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,7 +67,7 @@ public class PollService {
     }
 
     public PollResponse getPoll(
-            Long pollId,
+            UUID pollId,
             AuthenticatedUser user
     ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
@@ -83,7 +80,7 @@ public class PollService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
     public PollResponse upsertQuestions(
-            Long pollId,
+            UUID pollId,
             PollQuestionsUpsertRequest request,
             AuthenticatedUser user
     ) {
@@ -112,7 +109,7 @@ public class PollService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
     public PollResponse startPoll(
-            Long pollId,
+            UUID pollId,
             AuthenticatedUser user
     ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
@@ -131,7 +128,7 @@ public class PollService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
     public PollResponse finishPoll(
-            Long pollId,
+            UUID pollId,
             AuthenticatedUser user
     ) {
         final PollEntity pollEntity = findPollEntityById(pollId);
@@ -153,7 +150,7 @@ public class PollService {
         @pollSecurityService.countUserSubmissionsToPoll(authentication.principal.id, #pollId) < 1
         """)
     public SubmissionResponse createSubmission(
-            Long pollId,
+            UUID pollId,
             SubmissionCreateRequest request,
             AuthenticatedUser user
     ) {
@@ -166,7 +163,7 @@ public class PollService {
 
         final SubmissionEntity submissionEntity = new SubmissionEntity();
 
-        final Map<Long, AnswerDto> questionIdToAnswerDto = request
+        final Map<UUID, AnswerDto> questionIdToAnswerDto = request
                 .getAnswers()
                 .stream()
                 .collect(Collectors.toMap(
@@ -210,7 +207,7 @@ public class PollService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
-    public StatsResponse getStats(Long pollId) {
+    public StatsResponse getStats(UUID pollId) {
         final PollEntity pollEntity = findPollEntityById(pollId);
 
         final Long submissionsCount = submissionRepository
@@ -229,7 +226,7 @@ public class PollService {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @pollSecurityService.isUserPollOwner(authentication.principal.id, #pollId)")
     public PollResponse aiGenerateQuestions(
-            Long pollId,
+            UUID pollId,
             AiGenerateQuestionsRequest request,
             AuthenticatedUser user
     ) {
@@ -252,7 +249,7 @@ public class PollService {
         return upsertQuestions(pollId, pollQuestionsUpsertRequest, user);
     }
 
-    private PollEntity findPollEntityById(Long pollId) {
+    private PollEntity findPollEntityById(UUID pollId) {
         return pollRepository
                 .findById(pollId)
                 .orElseThrow(() -> new EntityNotFoundException("Poll with id " + pollId + " not found"));

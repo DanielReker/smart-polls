@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -23,6 +24,6 @@ public class MultiChoiceAnswerDto extends AnswerDto {
     }
 
     @NotNull
-    private List<Long> selectedChoiceIds;
+    private List<UUID> selectedChoiceIds;
 
 }

@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.UUID;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -35,10 +37,10 @@ import lombok.experimental.SuperBuilder;
 public abstract class AnswerDto {
 
     @Nullable
-    private final Long id;
+    private final UUID id;
 
     @NotNull
-    private final Long questionId;
+    private final UUID questionId;
 
 
     @JsonIgnore

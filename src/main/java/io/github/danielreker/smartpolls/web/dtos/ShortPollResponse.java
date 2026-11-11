@@ -9,13 +9,14 @@ import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Builder(toBuilder = true)
 @Jacksonized
 public record ShortPollResponse(
 
     @NotNull
-    Long id,
+    UUID id,
 
     @NotNull
     Instant createdDate,

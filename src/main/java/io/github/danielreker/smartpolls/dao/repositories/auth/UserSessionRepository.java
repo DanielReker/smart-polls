@@ -7,12 +7,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserSessionRepository
-        extends JpaRepository<UserSessionEntity, Long> {
+        extends JpaRepository<UserSessionEntity, UUID> {
 
     Optional<UserSessionEntity> findByTokenId(UUID tokenId);
 
     void deleteByTokenId(UUID tokenId);
 
-    void deleteAllByUserId(Long userId);
+    void deleteAllByUserId(UUID userId);
 
 }
