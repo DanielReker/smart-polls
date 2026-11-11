@@ -26,7 +26,7 @@ CREATE TABLE choice
     CONSTRAINT pk_choice PRIMARY KEY (id)
 );
 
-CREATE TABLE poll
+CREATE TABLE quiz
 (
     id           UUID                     NOT NULL,
     version      INTEGER                  NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE poll
     description  TEXT,
     created_date TIMESTAMP WITH TIME ZONE NOT NULL,
     owner_id     UUID                     NOT NULL,
-    CONSTRAINT pk_poll PRIMARY KEY (id)
+    CONSTRAINT pk_quiz PRIMARY KEY (id)
 );
 
 CREATE TABLE question
@@ -43,7 +43,7 @@ CREATE TABLE question
     id          UUID         NOT NULL,
     dtype       VARCHAR(31)  NOT NULL,
     version     INTEGER      NOT NULL,
-    poll_id     UUID         NOT NULL,
+    quiz_id     UUID         NOT NULL,
     name        VARCHAR(255) NOT NULL,
     description TEXT,
     position    INTEGER      NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE submission
     id           UUID                     NOT NULL,
     version      INTEGER                  NOT NULL,
     created_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    poll_id      UUID                     NOT NULL,
+    quiz_id      UUID                     NOT NULL,
     owner_id     UUID                     NOT NULL,
     CONSTRAINT pk_submission PRIMARY KEY (id)
 );
@@ -111,23 +111,23 @@ ALTER TABLE choice
 
 CREATE INDEX idx_choice_question_id ON choice (question_id);
 
-ALTER TABLE poll
-    ADD CONSTRAINT FK_POLL_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);
+ALTER TABLE quiz
+    ADD CONSTRAINT FK_QUIZ_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);
 
-CREATE INDEX idx_poll_owner_id ON poll (owner_id);
+CREATE INDEX idx_quiz_owner_id ON quiz (owner_id);
 
 ALTER TABLE question
-    ADD CONSTRAINT FK_QUESTION_ON_POLL FOREIGN KEY (poll_id) REFERENCES poll (id);
+    ADD CONSTRAINT FK_QUESTION_ON_QUIZ FOREIGN KEY (quiz_id) REFERENCES quiz (id);
 
-CREATE INDEX idx_question_poll_id ON question (poll_id);
+CREATE INDEX idx_question_quiz_id ON question (quiz_id);
 
 ALTER TABLE submission
     ADD CONSTRAINT FK_SUBMISSION_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);
 
 ALTER TABLE submission
-    ADD CONSTRAINT FK_SUBMISSION_ON_POLL FOREIGN KEY (poll_id) REFERENCES poll (id);
+    ADD CONSTRAINT FK_SUBMISSION_ON_QUIZ FOREIGN KEY (quiz_id) REFERENCES quiz (id);
 
-CREATE INDEX idx_submission_poll_id ON submission (poll_id);
+CREATE INDEX idx_submission_quiz_id ON submission (quiz_id);
 
 ALTER TABLE user_session
     ADD CONSTRAINT FK_USER_SESSION_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);

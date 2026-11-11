@@ -1,0 +1,30 @@
+package io.github.danielreker.smartquizzes.web.dtos.stats;
+
+import io.github.danielreker.smartquizzes.model.QuestionType;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
+
+import java.util.List;
+
+@Getter
+@SuperBuilder(toBuilder = true)
+@Jacksonized
+@EqualsAndHashCode(callSuper = true)
+@ToString
+public class SingleChoiceQuestionStatsDto extends QuestionStatsDto {
+
+    @Override
+    public QuestionType getQuestionType() {
+        return QuestionType.SINGLE_CHOICE;
+    }
+
+    @NotNull
+    @Valid
+    private final List<ChoiceStatsDto> choiceStats;
+
+}

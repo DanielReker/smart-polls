@@ -1,12 +1,12 @@
 services:
   postgres:
     image: pgvector/pgvector:pg17-trixie
-    container_name: smart-polls-postgres
+    container_name: smart-quizzes-postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - smart-polls-postgres-data:/var/lib/postgresql/data
+      - smart-quizzes-postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -36,6 +36,6 @@ services:
 
 
 volumes:
-  smart-polls-postgres-data:
+  smart-quizzes-postgres-data:
   ollama-mitmproxy:
   openrouter-mitmproxy:

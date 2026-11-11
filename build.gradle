@@ -7,7 +7,7 @@ plugins {
 
 group = 'io.github.danielreker'
 version = '0.0.1-SNAPSHOT'
-description = 'smart-polls'
+description = 'smart-quizzes'
 
 java {
     toolchain {
