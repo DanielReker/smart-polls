@@ -2,6 +2,7 @@ package io.github.danielreker.smartquizzes.web.dtos.auth;
 
 import io.github.danielreker.smartquizzes.model.auth.UserRole;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
@@ -20,7 +21,7 @@ public record UserResponse(
         String login,
 
         @NotNull
-        List<UserRole> roles,
+        List<@NotNull @Valid UserRole> roles,
 
         @NotNull
         Boolean isRegistered

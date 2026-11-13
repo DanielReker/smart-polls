@@ -18,7 +18,6 @@ public class StatsResponse {
     Long submissionsCount;
 
     @NotNull
-    @Valid
-    List<QuestionStatsDto> stats;
+    List<@NotNull @Valid QuestionStatsDto> stats;
 
 }

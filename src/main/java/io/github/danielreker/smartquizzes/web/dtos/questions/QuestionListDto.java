@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record QuestionListDto(
-        @NotNull @Valid List<QuestionDto> questions
+
+        @NotNull
+        List<@NotNull @Valid QuestionDto> questions
+
 ) {
 }

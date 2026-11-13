@@ -7,14 +7,14 @@ import io.github.danielreker.smartquizzes.model.QuestionType;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @JsonTypeInfo(
@@ -56,6 +56,13 @@ public abstract class QuestionDto {
     @NotNull
     @Min(0)
     private final Integer position;
+
+    @NotNull
+    @PositiveOrZero
+    private final BigDecimal maxScore;
+
+    @NotNull
+    private final List<@NotNull @Valid HintDto> hints;
 
 
     @JsonIgnore

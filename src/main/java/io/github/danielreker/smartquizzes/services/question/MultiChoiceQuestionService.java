@@ -5,6 +5,7 @@ import io.github.danielreker.smartquizzes.dao.entities.questions.ChoiceEntity;
 import io.github.danielreker.smartquizzes.dao.entities.questions.MultiChoiceQuestionEntity;
 import io.github.danielreker.smartquizzes.dao.repositories.answers.MultiChoiceAnswerRepository;
 import io.github.danielreker.smartquizzes.mappers.ChoiceMapper;
+import io.github.danielreker.smartquizzes.mappers.HintMapper;
 import io.github.danielreker.smartquizzes.mappers.QuestionMapper;
 import io.github.danielreker.smartquizzes.model.QuestionType;
 import io.github.danielreker.smartquizzes.web.dtos.answers.MultiChoiceAnswerDto;
@@ -12,22 +13,31 @@ import io.github.danielreker.smartquizzes.web.dtos.questions.MultiChoiceQuestion
 import io.github.danielreker.smartquizzes.web.dtos.stats.ChoiceStatsDto;
 import io.github.danielreker.smartquizzes.web.dtos.stats.MultiChoiceQuestionStatsDto;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class MultiChoiceQuestionService
         extends QuestionService<MultiChoiceQuestionEntity, MultiChoiceQuestionDto, MultiChoiceAnswerDto> {
-
-    private final QuestionMapper questionMapper;
 
     private final ChoiceMapper choiceMapper;
 
     private final MultiChoiceAnswerRepository multiChoiceAnswerRepository;
+
+
+    public MultiChoiceQuestionService(
+            HintMapper hintMapper,
+            QuestionMapper questionMapper,
+            ChoiceMapper choiceMapper,
+            MultiChoiceAnswerRepository multiChoiceAnswerRepository
+    ) {
+        super(hintMapper, questionMapper);
+        this.choiceMapper = choiceMapper;
+        this.multiChoiceAnswerRepository = multiChoiceAnswerRepository;
+    }
+
 
     @Override
     public QuestionType getQuestionType() {
@@ -55,7 +65,7 @@ public class MultiChoiceQuestionService
     }
 
     @Override
-    public MultiChoiceQuestionEntity buildQuestion(MultiChoiceQuestionDto questionDto) {
+    public MultiChoiceQuestionEntity buildConcreteQuestion(MultiChoiceQuestionDto questionDto) {
         final MultiChoiceQuestionEntity question = questionMapper.toEntity(questionDto);
 
         question.setPossibleChoices(questionDto

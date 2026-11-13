@@ -22,7 +22,6 @@ public class SubmissionResponse {
     Instant createdDate;
 
     @NotNull
-    @Valid
-    List<AnswerDto> answers;
+    List<@NotNull @Valid AnswerDto> answers;
 
 }

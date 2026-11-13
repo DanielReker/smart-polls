@@ -5,8 +5,8 @@ CREATE TABLE answer
     version       INTEGER     NOT NULL,
     submission_id UUID        NOT NULL,
     question_id   UUID        NOT NULL,
-    value         TEXT,
     choice_id     UUID,
+    value         TEXT,
     CONSTRAINT pk_answer PRIMARY KEY (id)
 );
 
@@ -23,7 +23,35 @@ CREATE TABLE choice
     question_id UUID         NOT NULL,
     name        VARCHAR(255) NOT NULL,
     position    INTEGER      NOT NULL,
+    is_correct  BOOLEAN      NOT NULL,
     CONSTRAINT pk_choice PRIMARY KEY (id)
+);
+
+CREATE TABLE hint
+(
+    id               UUID           NOT NULL,
+    version          INTEGER        NOT NULL,
+    question_id      UUID           NOT NULL,
+    sequential_order INTEGER        NOT NULL,
+    score_penalty    numeric(10, 3) NOT NULL,
+    text             TEXT           NOT NULL,
+    CONSTRAINT pk_hint PRIMARY KEY (id)
+);
+
+CREATE TABLE question
+(
+    id                    UUID           NOT NULL,
+    dtype                 VARCHAR(31)    NOT NULL,
+    version               INTEGER        NOT NULL,
+    quiz_id               UUID           NOT NULL,
+    name                  VARCHAR(255)   NOT NULL,
+    description           TEXT,
+    position              INTEGER        NOT NULL,
+    is_required           BOOLEAN        NOT NULL,
+    max_score             numeric(10, 3) NOT NULL,
+    max_length            INTEGER,
+    sample_correct_answer TEXT,
+    CONSTRAINT pk_question PRIMARY KEY (id)
 );
 
 CREATE TABLE quiz
@@ -36,20 +64,6 @@ CREATE TABLE quiz
     created_date TIMESTAMP WITH TIME ZONE NOT NULL,
     owner_id     UUID                     NOT NULL,
     CONSTRAINT pk_quiz PRIMARY KEY (id)
-);
-
-CREATE TABLE question
-(
-    id          UUID         NOT NULL,
-    dtype       VARCHAR(31)  NOT NULL,
-    version     INTEGER      NOT NULL,
-    quiz_id     UUID         NOT NULL,
-    name        VARCHAR(255) NOT NULL,
-    description TEXT,
-    position    INTEGER      NOT NULL,
-    is_required BOOLEAN      NOT NULL,
-    max_length  INTEGER,
-    CONSTRAINT pk_question PRIMARY KEY (id)
 );
 
 CREATE TABLE submission
@@ -111,15 +125,18 @@ ALTER TABLE choice
 
 CREATE INDEX idx_choice_question_id ON choice (question_id);
 
-ALTER TABLE quiz
-    ADD CONSTRAINT FK_QUIZ_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);
-
-CREATE INDEX idx_quiz_owner_id ON quiz (owner_id);
+ALTER TABLE hint
+    ADD CONSTRAINT FK_HINT_ON_QUESTION FOREIGN KEY (question_id) REFERENCES question (id);
 
 ALTER TABLE question
     ADD CONSTRAINT FK_QUESTION_ON_QUIZ FOREIGN KEY (quiz_id) REFERENCES quiz (id);
 
 CREATE INDEX idx_question_quiz_id ON question (quiz_id);
+
+ALTER TABLE quiz
+    ADD CONSTRAINT FK_QUIZ_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);
+
+CREATE INDEX idx_quiz_owner_id ON quiz (owner_id);
 
 ALTER TABLE submission
     ADD CONSTRAINT FK_SUBMISSION_ON_OWNER FOREIGN KEY (owner_id) REFERENCES users (id);

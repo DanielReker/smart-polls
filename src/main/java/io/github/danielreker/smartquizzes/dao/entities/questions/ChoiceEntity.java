@@ -26,4 +26,7 @@ public class ChoiceEntity extends BaseEntity {
     @Column(name = "position", columnDefinition = "int4", nullable = false)
     private Integer position;
 
+    @Column(name = "is_correct", columnDefinition = "boolean", nullable = false)
+    private Boolean isCorrect = false;
+
 }

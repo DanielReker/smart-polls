@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Length;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -29,13 +33,19 @@ public abstract class QuestionEntity extends BaseEntity {
     @Column(name = "description", columnDefinition = "text", length = Length.LONG32)
     private String description;
 
-
-
     @Column(name = "position", columnDefinition = "int4", nullable = false)
     private Integer position;
 
     @Column(name = "is_required", columnDefinition = "boolean", nullable = false)
     private Boolean isRequired = false;
+
+    @Column(name = "max_score", columnDefinition = "numeric(10,3)", nullable = false, precision = 10, scale = 3)
+    private BigDecimal maxScore;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sequentialOrder ASC")
+    private List<HintEntity> hints = new ArrayList<>();
+
 
     public abstract QuestionType getQuestionType();
 

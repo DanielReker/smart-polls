@@ -24,16 +24,19 @@ public interface QuestionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "quiz", ignore = true)
+    @Mapping(target = "hints", ignore = true)
     TextQuestionEntity toEntity(TextQuestionDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "quiz", ignore = true)
     @Mapping(target = "possibleChoices", ignore = true)
+    @Mapping(target = "hints", ignore = true)
     SingleChoiceQuestionEntity toEntity(SingleChoiceQuestionDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "quiz", ignore = true)
     @Mapping(target = "possibleChoices", ignore = true)
+    @Mapping(target = "hints", ignore = true)
     MultiChoiceQuestionEntity toEntity(MultiChoiceQuestionDto dto);
 
 }

@@ -55,7 +55,8 @@ class QuizController {
             @RequestBody @Valid QuizQuestionsUpsertRequest request,
             @AuthenticationPrincipal AuthenticatedUser user
     ) {
-        final QuizResponse response = quizService.upsertQuestions(quizId, request, user);
+        final QuizResponse response = quizService
+                .upsertQuestions(quizId, request, user);
 
         return ResponseEntity
                 .ok(response);

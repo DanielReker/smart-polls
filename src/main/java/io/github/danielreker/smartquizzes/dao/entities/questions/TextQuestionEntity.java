@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Length;
 
 @Getter
 @Setter
@@ -22,5 +23,8 @@ public class TextQuestionEntity extends QuestionEntity {
 
     @Column(name = "max_length", columnDefinition = "int4")
     private Integer maxLength;
+
+    @Column(name = "sample_correct_answer", columnDefinition = "text", length = Length.LONG32)
+    private String sampleCorrectAnswer;
 
 }

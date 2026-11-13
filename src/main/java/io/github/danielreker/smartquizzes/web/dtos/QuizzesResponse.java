@@ -1,5 +1,6 @@
 package io.github.danielreker.smartquizzes.web.dtos;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.extern.jackson.Jacksonized;
@@ -11,7 +12,7 @@ import java.util.List;
 public record QuizzesResponse(
 
         @NotNull
-        List<ShortQuizResponse> quizzes
+        List<@NotNull @Valid ShortQuizResponse> quizzes
 
 ) {
 }

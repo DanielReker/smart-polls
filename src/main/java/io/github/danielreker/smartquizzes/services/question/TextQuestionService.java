@@ -3,23 +3,29 @@ package io.github.danielreker.smartquizzes.services.question;
 import io.github.danielreker.smartquizzes.dao.entities.answers.TextAnswerEntity;
 import io.github.danielreker.smartquizzes.dao.entities.questions.TextQuestionEntity;
 import io.github.danielreker.smartquizzes.dao.repositories.answers.TextAnswerRepository;
+import io.github.danielreker.smartquizzes.mappers.HintMapper;
 import io.github.danielreker.smartquizzes.mappers.QuestionMapper;
 import io.github.danielreker.smartquizzes.model.QuestionType;
 import io.github.danielreker.smartquizzes.model.exceptions.AnswerValidationException;
 import io.github.danielreker.smartquizzes.web.dtos.answers.TextAnswerDto;
 import io.github.danielreker.smartquizzes.web.dtos.questions.TextQuestionDto;
 import io.github.danielreker.smartquizzes.web.dtos.stats.TextQuestionStatsDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class TextQuestionService
         extends QuestionService<TextQuestionEntity, TextQuestionDto, TextAnswerDto> {
 
-    private final QuestionMapper questionMapper;
-
     private final TextAnswerRepository textAnswerRepository;
+
+    public TextQuestionService(
+            HintMapper hintMapper,
+            QuestionMapper questionMapper,
+            TextAnswerRepository textAnswerRepository
+    ) {
+        super(hintMapper, questionMapper);
+        this.textAnswerRepository = textAnswerRepository;
+    }
 
     @Override
     public QuestionType getQuestionType() {
@@ -41,7 +47,7 @@ public class TextQuestionService
     }
 
     @Override
-    public TextQuestionEntity buildQuestion(TextQuestionDto questionDto) {
+    public TextQuestionEntity buildConcreteQuestion(TextQuestionDto questionDto) {
         return questionMapper.toEntity(questionDto);
     }
 

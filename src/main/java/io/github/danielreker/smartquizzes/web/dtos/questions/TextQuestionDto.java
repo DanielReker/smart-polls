@@ -23,4 +23,7 @@ public class TextQuestionDto extends QuestionDto {
     @Nullable
     private final Integer maxLength;
 
+    @Nullable
+    private final String sampleCorrectAnswer;
+
 }

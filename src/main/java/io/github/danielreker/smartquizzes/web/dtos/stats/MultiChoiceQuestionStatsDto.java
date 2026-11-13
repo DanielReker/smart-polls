@@ -24,7 +24,6 @@ public class MultiChoiceQuestionStatsDto extends QuestionStatsDto {
     }
 
     @NotNull
-    @Valid
-    private final List<ChoiceStatsDto> choiceStats;
+    private final List<@NotNull @Valid ChoiceStatsDto> choiceStats;
 
 }

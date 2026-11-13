@@ -24,7 +24,6 @@ public class SingleChoiceQuestionDto extends QuestionDto {
     }
 
     @NotNull
-    @Valid
-    private final List<ChoiceDto> possibleChoices;
+    private final List<@NotNull @Valid ChoiceDto> possibleChoices;
 
 }

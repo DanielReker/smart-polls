@@ -24,6 +24,6 @@ public class MultiChoiceAnswerDto extends AnswerDto {
     }
 
     @NotNull
-    private List<UUID> selectedChoiceIds;
+    private List<@NotNull UUID> selectedChoiceIds;
 
 }

@@ -11,7 +11,6 @@ import java.util.List;
 public class SubmissionCreateRequest {
 
     @NotNull
-    @Valid
-    List<AnswerDto> answers;
+    List<@NotNull @Valid AnswerDto> answers;
 
 }

@@ -38,8 +38,7 @@ public class QuizResponse {
     QuizStatus status;
 
     @NotNull
-    @Valid
-    List<QuestionDto> questions;
+    List<@NotNull @Valid QuestionDto> questions;
 
     @NotNull
     Long mySubmissionsCount;

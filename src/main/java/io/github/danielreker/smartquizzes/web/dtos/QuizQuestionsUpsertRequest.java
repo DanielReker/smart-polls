@@ -11,6 +11,9 @@ import java.util.List;
 @Builder(toBuilder = true)
 @Jacksonized
 public record QuizQuestionsUpsertRequest(
-        @NotNull @Valid List<QuestionDto> questions
+
+        @NotNull
+        List<@NotNull @Valid QuestionDto> questions
+
 ) {
 }
